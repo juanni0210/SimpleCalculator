@@ -1,10 +1,10 @@
 package calculator_pack;
 
-import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.awt.event.ActionEvent;
+import javax.swing.*;
 
 public class Calculator {
 
@@ -24,8 +24,8 @@ public class Calculator {
         Digit2, Digit3, Subtract, Sign, Digit0, Dot, Equal
     }
 
-    private String[] buttonStrings = { "\u2190", "%", "C", "/", "7", "8", "9", "*", "4", "5", "6", "+", "1", "2", "3",
-            "-", "+/-", "0", ".", "=" };
+    private final String[] buttonStrings = { "\u2190", "%", "C", "/", "7", "8", "9", "*", "4", "5", "6", "+", "1", "2",
+            "3", "-", "+/-", "0", ".", "=" };
 
     private final class DigitBtnHandler implements ActionListener {
 
@@ -50,7 +50,8 @@ public class Calculator {
 
     final int WINDOW_WIDTH = 350;
     final int WINDOW_HEIGHT = 520;
-    final Insets INSETS = new Insets(1, 1, 1, 1);
+    final int SPACE = 5;
+    final int MARGIN = 10;
 
     private JFrame frame;
     private JTextField txtDisplay;
@@ -247,12 +248,15 @@ public class Calculator {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = INSETS;
+        c.insets = new Insets(1, 1, 1, 1);
         int maxGridHeight = 6;
         int maxGridWidth = 4;
         c.gridx = 0;
         c.gridy = 0;
-        c.weightx = 0;
+        //        c.gridwidth = WINDOW_WIDTH - 2 * MARGIN;
+        //        c.gridheight = WINDOW_HEIGHT - 2 * MARGIN;
+        c.weightx = 1.0;
+        c.weighty = 1.0;
         panel.add(txtDisplay, c);
 
         int currentBtn = 0;
@@ -260,10 +264,8 @@ public class Calculator {
             for (int gridX = 0; gridX < maxGridWidth; gridX++) {
                 c.gridx = gridX;
                 c.gridy = gridY;
-                c.weightx = 0.5;
-                c.weighty = 0.5;
                 assert currentBtn < buttons.size();
-                panel.add(buttons.get(currentBtn++));
+                panel.add(buttons.get(currentBtn++), c);
             }
         }
 
