@@ -50,16 +50,19 @@ public class Calculator {
 
     final int WINDOW_WIDTH = 350;
     final int WINDOW_HEIGHT = 520;
-    final int SPACE = 5;
+    final int SPACE = 1;
     final int MARGIN = 10;
+    final int PAD_COL = 4;
+    final int PAD_ROW = 5;
+    final int PREFERED_SIZE = (WINDOW_WIDTH - 2 * MARGIN - (PAD_COL - 1) * SPACE) / PAD_COL;
 
     private JFrame frame;
     private JTextField txtDisplay;
+    private JLabel calulationDisplay; // Show current calculation
     double firstNum;
     double secondNum;
-    String operations;
+    String operation;
     double result;
-    String answer;
 
     /**
      * Launch the application.
@@ -90,17 +93,27 @@ public class Calculator {
      */
     private void initialize() {
         frame = new JFrame();
+        frame.setResizable(false);
         frame.setBounds(100, 100, WINDOW_WIDTH, WINDOW_HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        txtDisplay = new JTextField();
+        txtDisplay.setHorizontalAlignment(SwingConstants.RIGHT);
+        txtDisplay.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        txtDisplay.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+        txtDisplay.setColumns(10);
+        txtDisplay.setPreferredSize(new Dimension(WINDOW_WIDTH - 2 * MARGIN, 70));
 
         DigitBtnHandler digitBtnHandler = new DigitBtnHandler(txtDisplay);
         Font btnFont = new Font("Tahoma", Font.BOLD, 20);
 
-        int numsOfButtons = ButtonType.values().length;
-        assert numsOfButtons == buttonStrings.length;
-        for (int i = 0; i < numsOfButtons; i++) {
+        int numOfButtons = ButtonType.values().length;
+        assert numOfButtons == buttonStrings.length;
+        for (int i = 0; i < numOfButtons; i++) {
             JButton btn = new JButton(buttonStrings[i]);
             btn.setFont(btnFont);
+            btn.setPreferredSize(new Dimension(PREFERED_SIZE, PREFERED_SIZE));
+            btn.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
             ButtonType btnType = ButtonType.values()[i];
             switch (btnType) {
             case BackSpace:
@@ -124,7 +137,7 @@ public class Calculator {
                     public void actionPerformed(ActionEvent e) {
                         firstNum = Double.parseDouble(txtDisplay.getText());
                         txtDisplay.setText("");
-                        operations = "%";
+                        operation = "%";
                     }
                 });
                 break;
@@ -142,7 +155,7 @@ public class Calculator {
                     public void actionPerformed(ActionEvent e) {
                         firstNum = Double.parseDouble(txtDisplay.getText());
                         txtDisplay.setText("");
-                        operations = "/";
+                        operation = "/";
                     }
                 });
                 break;
@@ -152,7 +165,7 @@ public class Calculator {
                     public void actionPerformed(ActionEvent e) {
                         firstNum = Double.parseDouble(txtDisplay.getText());
                         txtDisplay.setText("");
-                        operations = "*";
+                        operation = "*";
                     }
                 });
                 break;
@@ -163,7 +176,7 @@ public class Calculator {
                         System.out.println(getClass());
                         firstNum = Double.parseDouble(txtDisplay.getText());
                         txtDisplay.setText("");
-                        operations = "+";
+                        operation = "+";
                     }
                 });
                 break;
@@ -173,7 +186,7 @@ public class Calculator {
                     public void actionPerformed(ActionEvent e) {
                         firstNum = Double.parseDouble(txtDisplay.getText());
                         txtDisplay.setText("");
-                        operations = "-";
+                        operation = "-";
                     }
                 });
                 break;
@@ -183,27 +196,22 @@ public class Calculator {
                     public void actionPerformed(ActionEvent e) {
                         String answer;
                         secondNum = Double.parseDouble(txtDisplay.getText());
-                        if (operations == "+") {
+                        if (operation == "+") {
                             result = firstNum + secondNum;
-                            answer = String.format("%.2f", result);
-                            txtDisplay.setText(answer);
-                        } else if (operations == "-") {
+                        } else if (operation == "-") {
                             result = firstNum - secondNum;
-                            answer = String.format("%.2f", result);
-                            txtDisplay.setText(answer);
-                        } else if (operations == "*") {
+                        } else if (operation == "*") {
                             result = firstNum * secondNum;
-                            answer = String.format("%.2f", result);
-                            txtDisplay.setText(answer);
-                        } else if (operations == "/") {
+                        } else if (operation == "/") {
                             result = firstNum / secondNum;
-                            answer = String.format("%.2f", result);
-                            txtDisplay.setText(answer);
-                        } else if (operations == "%") {
+                        } else if (operation == "%") {
                             result = firstNum % secondNum;
-                            answer = String.format("%.2f", result);
-                            txtDisplay.setText(answer);
+                        } else {
+                            assert false : "Something is wrong";
                         }
+
+                        answer = String.format("%.2f", result);
+                        txtDisplay.setText(answer);
                     }
                 });
                 break;
@@ -239,36 +247,24 @@ public class Calculator {
             buttons.add(btn);
         }
 
-        txtDisplay = new JTextField();
-        txtDisplay.setHorizontalAlignment(SwingConstants.RIGHT);
-        txtDisplay.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        txtDisplay.setBorder(BorderFactory.createEmptyBorder());
-        txtDisplay.setColumns(10);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(MARGIN, MARGIN, MARGIN, MARGIN));
 
-        JPanel panel = new JPanel(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(1, 1, 1, 1);
-        int maxGridHeight = 6;
-        int maxGridWidth = 4;
-        c.gridx = 0;
-        c.gridy = 0;
-        //        c.gridwidth = WINDOW_WIDTH - 2 * MARGIN;
-        //        c.gridheight = WINDOW_HEIGHT - 2 * MARGIN;
-        c.weightx = 1.0;
-        c.weighty = 1.0;
-        panel.add(txtDisplay, c);
+        JPanel topPanel = new JPanel(new BorderLayout());
 
-        int currentBtn = 0;
-        for (int gridY = 1; gridY < maxGridHeight; gridY++) {
-            for (int gridX = 0; gridX < maxGridWidth; gridX++) {
-                c.gridx = gridX;
-                c.gridy = gridY;
-                assert currentBtn < buttons.size();
-                panel.add(buttons.get(currentBtn++), c);
-            }
+        topPanel.add(txtDisplay, BorderLayout.NORTH);
+        topPanel.add(new JLabel(" "), BorderLayout.CENTER); // empty label as padding, not ideal
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+
+        GridLayout grid = new GridLayout(PAD_ROW, PAD_COL, SPACE, SPACE);
+        JPanel padPanel = new JPanel(grid);
+        for (int i = 0; i < numOfButtons; i++) {
+            padPanel.add(buttons.get(i));
         }
+        mainPanel.add(padPanel, BorderLayout.CENTER);
 
-        frame.getContentPane().add(panel);
+        frame.getContentPane().add(mainPanel);
+        frame.pack();
+        frame.setVisible(true);
     }
 }
