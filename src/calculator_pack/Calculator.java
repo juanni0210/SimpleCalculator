@@ -11,7 +11,7 @@ public class Calculator {
     /*
      * layout
      * -------------------
-     * <-| % | C | %
+     * <-| % | C | /
      * 7 | 8 | 9 | *
      * 4 | 5 | 6 | +
      * 1 | 2 | 3 | -
@@ -48,11 +48,11 @@ public class Calculator {
 
     final int WINDOW_WIDTH = 350;
     final int WINDOW_HEIGHT = 520;
-    final int SPACE = 1;
+    final int SPACEING = 1;
     final int MARGIN = 5;
     final int PAD_COL = 4;
     final int PAD_ROW = 5;
-    final int PREFERED_SIZE = (WINDOW_WIDTH - 2 * MARGIN - (PAD_COL - 1) * SPACE) / PAD_COL;
+    final int PREFERED_SIZE = (WINDOW_WIDTH - 2 * MARGIN - (PAD_COL - 1) * SPACEING) / PAD_COL;
     final Color COLOR_BKG = new Color(85, 85, 85);
     final Color COLOR_BTN_DEFAULT = new Color(51, 51, 51);
     final Color COLOR_BTN_DIGIT = new Color(17, 17, 17);
@@ -96,7 +96,7 @@ public class Calculator {
      */
     private void initialize() {
         frame = new JFrame();
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setBounds(100, 100, WINDOW_WIDTH, WINDOW_HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -302,7 +302,7 @@ public class Calculator {
         topPanel.add(new JLabel(" "), BorderLayout.SOUTH); // empty label as padding, not ideal
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        GridLayout grid = new GridLayout(PAD_ROW, PAD_COL, SPACE, SPACE);
+        GridLayout grid = new GridLayout(PAD_ROW, PAD_COL, SPACEING, SPACEING);
         JPanel padPanel = new JPanel(grid);
         padPanel.setBackground(COLOR_BKG);
         for (int i = 0; i < numOfButtons; i++) {
@@ -317,5 +317,6 @@ public class Calculator {
 
     void resetDotFlag() {
         dotExists = false;
+
     }
 }
