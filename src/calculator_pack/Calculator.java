@@ -1,14 +1,16 @@
 package calculator_pack;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
 
 import javax.swing.*;
 
-import org.graalvm.compiler.core.common.type.ArithmeticOpTable.BinaryOp.Add;
 
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -46,8 +48,14 @@ public class Calculator {
     final int PAD_COL = 4;
     final int PAD_ROW = 5;
     final int PREFERED_SIZE = (WINDOW_WIDTH - 2 * MARGIN - (PAD_COL - 1) * SPACEING) / PAD_COL;
+    final Color COLOR_BKG = new Color(85, 85, 85);
+    final Color COLOR_BTN_DEFAULT = new Color(51, 51, 51);
+    final Color COLOR_BTN_DIGIT = new Color(17, 17, 17);
+    final Color COLOR_BTN_EQUAL = new Color(51, 124, 129);
+
     private JFrame frame;
     private JTextField txtDisplay;
+    private JLabel displayLabel; // Show current calculation
     double firstNum;
     double secondNum;
     String operations;
@@ -113,21 +121,34 @@ public class Calculator {
      */
     private void initialize() {
         frame = new JFrame();
+        frame.setResizable(true);
         frame.setBounds(100, 100, WINDOW_WIDTH, WINDOW_HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(null);
+
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(MARGIN, MARGIN, MARGIN, MARGIN));
+        //mainPanel.setBackground(COLOR_BKG);
 
 
+        displayLabel = new JLabel();
+        //displayLabel.setForeground(Color.WHITE);
+        displayLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        displayLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        displayLabel.setBorder(BorderFactory.createEmptyBorder());
+        displayLabel.setPreferredSize(new Dimension(WINDOW_WIDTH - 2 * MARGIN, 35));
 
         txtDisplay = new JTextField();
+        //txtDisplay.setBackground(COLOR_BKG);
+        //txtDisplay.setForeground(Color.WHITE);
         txtDisplay.setHorizontalAlignment(SwingConstants.RIGHT);
         txtDisplay.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        txtDisplay.setBounds(12, 13, 300, 53);
         txtDisplay.setBorder(BorderFactory.createEmptyBorder());
-        frame.getContentPane().add(txtDisplay);
         txtDisplay.setColumns(10);
+        txtDisplay.setPreferredSize(new Dimension(WINDOW_WIDTH - 2 * MARGIN, 70));
 
-        System.out.println(getClass());
+        //System.out.println(getClass());
+
+
 
 
 
@@ -145,7 +166,7 @@ public class Calculator {
                 }
             }
         });
-        frame.getContentPane().add(btnBackSpace);
+
 
         btnC = createButton("C", new ActionListener() {
             @Override
@@ -153,7 +174,7 @@ public class Calculator {
                 txtDisplay.setText(null);
             }
         });
-        frame.getContentPane().add(btnC);
+
 
         btnPercent = createButton("%", new ActionListener() {
             @Override
@@ -163,7 +184,7 @@ public class Calculator {
                 operations = "%";
             }
         });
-        frame.getContentPane().add(btnPercent);
+
 
         btnDivision = createButton("/", new ActionListener() {
             @Override
@@ -173,18 +194,18 @@ public class Calculator {
                 operations = "/";
             }
         });
-        frame.getContentPane().add(btnDivision);
+
 
         //-----------------Row 2---------------------
         DigitBtnHandler digitBtnHandler = new DigitBtnHandler(txtDisplay);
         btn7 = createButton("7", digitBtnHandler);
-        frame.getContentPane().add(btn7);
+
 
         btn8 = createButton("8", digitBtnHandler);
-        frame.getContentPane().add(btn8);
+
 
         btn9 = createButton("9", digitBtnHandler);
-        frame.getContentPane().add(btn9);
+
 
         btnMultiplication = createButton("*", new ActionListener() {
             @Override
@@ -194,17 +215,17 @@ public class Calculator {
                 operations = "*";
             }
         });
-        frame.getContentPane().add(btnMultiplication);
+
 
         //-----------------Row 3---------------------
         btn4 = createButton("4", digitBtnHandler);
-        frame.getContentPane().add(btn4);
+
 
         btn5 = createButton("5", digitBtnHandler);
-        frame.getContentPane().add(btn5);
+
 
         btn6 = createButton("6", digitBtnHandler);
-        frame.getContentPane().add(btn6);
+
 
         btnMinus = createButton("-", new ActionListener() {
             @Override
@@ -214,17 +235,14 @@ public class Calculator {
                 operations = "-";
             }
         });
-        frame.getContentPane().add(btnMinus);
+
 
         //-----------------Row 4---------------------
         btn1 = createButton("1", digitBtnHandler);
-        frame.getContentPane().add(btn1);
 
         btn2 = createButton("2", digitBtnHandler);
-        frame.getContentPane().add(btn2);
 
         btn3 = createButton("3", digitBtnHandler);
-        frame.getContentPane().add(btn3);
 
         btnPlus = createButton("+", new ActionListener() {
             @Override
@@ -235,11 +253,10 @@ public class Calculator {
                 operations = "+";
             }
         });
-        frame.getContentPane().add(btnPlus);
+
 
         //-----------------Row 5---------------------
         btn0 = createButton("0", digitBtnHandler);
-        frame.getContentPane().add(btn0);
 
         btnDot = createButton(".", new ActionListener() {
             @Override
@@ -247,7 +264,6 @@ public class Calculator {
                 // TODO Auto-generated method stub
             }
         });
-        frame.getContentPane().add(btnDot);
 
         btnPM = createButton("\u00B1", new ActionListener() {
             @Override
@@ -257,7 +273,6 @@ public class Calculator {
                 txtDisplay.setText(String.valueOf(ops));
             }
         });
-        frame.getContentPane().add(btnPM);
 
         btnEqual = createButton("=", new ActionListener() {
             @Override
@@ -287,7 +302,50 @@ public class Calculator {
                 }
             }
         });
-        frame.getContentPane().add(btnEqual);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(displayLabel, BorderLayout.NORTH);
+        topPanel.add(txtDisplay, BorderLayout.CENTER);
+
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+
+        GridLayout gridLayout = new GridLayout(PAD_ROW, PAD_COL, SPACEING, SPACEING);
+        JPanel bottomPanel = new JPanel(gridLayout);
+        /*
+         * layout
+         * -------------------
+         * <-| % | C | /
+         * 7 | 8 | 9 | *
+         * 4 | 5 | 6 | +
+         * 1 | 2 | 3 | -
+         * +-| 0 | . | =
+         */
+        bottomPanel.add(btnBackSpace);
+        bottomPanel.add(btnPercent);
+        bottomPanel.add(btnC);
+        bottomPanel.add(btnDivision);
+        bottomPanel.add(btn7);
+        bottomPanel.add(btn8);
+        bottomPanel.add(btn9);
+        bottomPanel.add(btnMultiplication);
+        bottomPanel.add(btn4);
+        bottomPanel.add(btn5);
+        bottomPanel.add(btn6);
+        bottomPanel.add(btnPlus);
+        bottomPanel.add(btn1);
+        bottomPanel.add(btn2);
+        bottomPanel.add(btn3);
+        bottomPanel.add(btnMinus);
+        bottomPanel.add(btnPM);
+        bottomPanel.add(btn0);
+        bottomPanel.add(btnDot);
+        bottomPanel.add(btnEqual);
+
+        mainPanel.add(bottomPanel, BorderLayout.CENTER);
+
+        frame.getContentPane().add(mainPanel);
+        frame.pack();
+        frame.setVisible(true);
     }
 
     private JButton createButton(String btnString, ActionListener actionListener) {
