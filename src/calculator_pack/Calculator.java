@@ -127,30 +127,24 @@ public class Calculator {
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(MARGIN, MARGIN, MARGIN, MARGIN));
-        //mainPanel.setBackground(COLOR_BKG);
+        mainPanel.setBackground(COLOR_BKG);
 
 
         displayLabel = new JLabel();
-        //displayLabel.setForeground(Color.WHITE);
+        displayLabel.setForeground(Color.WHITE);
         displayLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         displayLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
         displayLabel.setBorder(BorderFactory.createEmptyBorder());
         displayLabel.setPreferredSize(new Dimension(WINDOW_WIDTH - 2 * MARGIN, 35));
 
         txtDisplay = new JTextField();
-        //txtDisplay.setBackground(COLOR_BKG);
-        //txtDisplay.setForeground(Color.WHITE);
+        txtDisplay.setBackground(COLOR_BKG);
+        txtDisplay.setForeground(Color.WHITE);
         txtDisplay.setHorizontalAlignment(SwingConstants.RIGHT);
         txtDisplay.setFont(new Font("Tahoma", Font.PLAIN, 20));
         txtDisplay.setBorder(BorderFactory.createEmptyBorder());
         txtDisplay.setColumns(10);
         txtDisplay.setPreferredSize(new Dimension(WINDOW_WIDTH - 2 * MARGIN, 70));
-
-        //System.out.println(getClass());
-
-
-
-
 
         //-----------------Row 1---------------------
         btnBackSpace = createButton("\u2190", new ActionListener() {
@@ -304,6 +298,7 @@ public class Calculator {
         });
 
         JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(COLOR_BKG);
         topPanel.add(displayLabel, BorderLayout.NORTH);
         topPanel.add(txtDisplay, BorderLayout.CENTER);
 
@@ -311,6 +306,7 @@ public class Calculator {
 
         GridLayout gridLayout = new GridLayout(PAD_ROW, PAD_COL, SPACEING, SPACEING);
         JPanel bottomPanel = new JPanel(gridLayout);
+        bottomPanel.setBackground(COLOR_BKG);
         /*
          * layout
          * -------------------
